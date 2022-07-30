@@ -1,0 +1,75 @@
+version: '3'
+services:
+    mariadb:
+        build: requirements/mariadb
+        image: mariadb
+        restart: always
+        expose:
+            - "3306"
+        volumes:
+          - db:/var/lib/mysql
+        networks:
+            - net
+        tty: true
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            WP_DB_NAME: ${WP_DB_NAME}
+            WP_DB_USER: ${WP_DB_USER}
+            WP_DB_PASSWORD: ${WP_DB_PASSWORD}
+
+    wordpress:
+        build: requirements/wordpress
+        image: wordpress
+        restart: always
+        expose:
+            - "9000"
+        volumes:
+          - frontend:/var/www/html
+        networks:
+            - net
+        tty: true
+        environment:
+            WP_URL: ${WP_URL}
+            MYSQL_HOST: ${MYSQL_HOST}
+            WP_DB_NAME: ${WP_DB_NAME}
+            WP_DB_USER: ${WP_DB_USER}
+            WP_DB_PASSWORD: ${WP_DB_PASSWORD}
+            WP_ADMIN_USER: ${WP_ADMIN_USER}
+            WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
+            WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
+            WP_USER: ${WP_USER}
+            WP_PASSWORD: ${WP_PASSWORD}
+            WP_EMAIL: ${WP_EMAIL}
+        depends_on:
+            - mariadb
+
+    nginx:
+        build: requirements/nginx
+        image: nginx
+        restart: always
+        ports:
+            - "${NGINX_PORT}:443"
+        volumes:
+          - frontend:/var/www/html
+        networks:
+            - net
+        tty: true
+        depends_on:
+            - wordpress
+
+networks:
+    net:
+
+# https://qiita.com/reflet/items/5c0a488494c7d6904084
+# https://zenn.dev/ningensei848/scraps/22b312d5195979
+volumes:
+    db:
+        driver_opts:
+            type: none
+            device: ${VOLUME_DIR}/db
+            o: bind
+    frontend:
+        driver_opts:
+            type: none
+            device: ${VOLUME_DIR}/frontend
+            o: bind
