@@ -11,11 +11,7 @@ services:
         networks:
             - net
         tty: true
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            WP_DB_NAME: ${WP_DB_NAME}
-            WP_DB_USER: ${WP_DB_USER}
-            WP_DB_PASSWORD: ${WP_DB_PASSWORD}
+        env_file: .env
 
     wordpress:
         build: requirements/wordpress
@@ -28,20 +24,9 @@ services:
         networks:
             - net
         tty: true
-        environment:
-            WP_URL: ${WP_URL}
-            MYSQL_HOST: ${MYSQL_HOST}
-            WP_DB_NAME: ${WP_DB_NAME}
-            WP_DB_USER: ${WP_DB_USER}
-            WP_DB_PASSWORD: ${WP_DB_PASSWORD}
-            WP_ADMIN_USER: ${WP_ADMIN_USER}
-            WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
-            WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
-            WP_USER: ${WP_USER}
-            WP_PASSWORD: ${WP_PASSWORD}
-            WP_EMAIL: ${WP_EMAIL}
         depends_on:
             - mariadb
+        env_file: .env
 
     nginx:
         build: requirements/nginx

@@ -1,16 +1,16 @@
 include srcs/.env
 
 build:
-	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml up --build
+	cd srcs && docker-compose up --build
 
 back_build:
-	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml up --build -d
+	cd srcs && docker-compose up --build -d
 
 down:
-	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml down
+	cd srcs && docker-compose down
 
 volume_clean:
-	sudo rm -rf ${VOLUME_DIR}/frontend ${VOLUME_DIR}/db
+	sudo rm -rf ${VOLUME_DIR_FROM_ROOT}/frontend ${VOLUME_DIR_FROM_ROOT}/db
 	docker volume rm $$(docker volume ls -q)
 
 image_clean:
@@ -31,9 +31,8 @@ exec_nginx:
 	cd srcs && docker-compose exec nginx /bin/ash
 
 make_dir:
-	sudo mkdir -p ${VOLUME_DIR}/frontend
-	sudo mkdir -p ${VOLUME_DIR}/db
-	sudo chmod 777 -R ${VOLUME_DIR}
+	sudo mkdir -p ${VOLUME_DIR_FROM_ROOT}/frontend
+	sudo mkdir -p ${VOLUME_DIR_FROM_ROOT}/db
 
 host_setting:
 	sudo sed -e 's/127.0.0.1/127.0.0.1	${WP_URL}/' /etc/hosts > copy_hosts
