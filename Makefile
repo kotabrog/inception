@@ -1,13 +1,13 @@
 include srcs/.env
 
 build:
-	docker-compose -f srcs/docker-compose.yml --env-file srcs/.env up --build
+	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml up --build
 
 back_build:
-	docker-compose -f srcs/docker-compose.yml --env-file srcs/.env up --build -d
+	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml up --build -d
 
 down:
-	docker-compose -f srcs/docker-compose.yml --env-file srcs/.env down
+	docker-compose --project-directory ./srcs/ -f ./srcs/docker-compose.yml down
 
 volume_clean:
 	sudo rm -rf ${VOLUME_DIR}/frontend ${VOLUME_DIR}/db
